@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>申请记录 - 学生</title>
+    <!--Bootstrape Css-->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel = "stylesheet" type = "text/css" href = "{% static '总样式.css' %}">
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-primary fixed-top navbar-expand-lg topnav">
+        <h1 class="navbar-brand">出入校园申请系统</h1>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto" style = "float: top;">
+                <li class="nav-item">
+                    <a class="nav-link" href="/student/{{stu.id}}/home">个人中心</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/student/{{stu.id}}/profile">修改密码</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/student/{{stu.id}}/application">出入校园申请记录<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/student/{{stu.id}}/apply">出入校园申请</a>
+                </li>
+            </ul>
+        </div>
+        <a class="nav-link logout" href="/student/{{stu.id}}/home"><p><font color ="white">{{ stu.name }}</font></p></a>
+        <a class="nav-link logout" href="/" title="退出"><p><font color = "white">退出登录</font></p></a>
+    </nav>
+    <div id = "background"><br><br><br><br><br><br><br><br><br><br><br><br></div>
+
+    <div class = "stdmsg_center_article">
+        <div>
+            <br>
+            <h2 id = "jiatiao_top">申请记录</h2>
+            <ul>
+                {% for app in applications %}
+                    <li class = "jiatiao">
+                        <h3>{{ app.grade.name }}&nbsp;&nbsp;
+                        {% if app.is_out == 1 %}
+                           申请出校</h3>
+                        {% elif app.is_out == 0 %}
+                           申请入校</h3>
+                        {% endif %}
+                        <p>申请理由：{{ app.reason_site }}</p>
+                        <p class = "jiatiao_stdname">------{{ app.stu.name }}</p>
+                        <p>{{ app.time }}</p>
+                        {% if app.is_agreed == 0 %}
+                            <p>暂未处理</p>
+                        {% elif app.is_agreed == 1 %}
+                            <p>已同意</p>
+                        {% elif app.is_agreed == 2 %}
+                            <p>已拒绝</p>
+                        {% endif %}
+                        {% for ins in inss%}
+                        {% if ins.id == stu.ins_id %}
+                        <p>审批人：{{ ins.name }}</p>
+                        {% endif %}
+                        {% endfor %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <nav class="navbar fixed-bottom navbar-light navbar-dark bg-primary">
+        <a class="navbar-brand" href="/student/{{stu.id}}/application">感谢使用，点我返回顶部</a>
+    </nav>
+
+    <!--Bootstrape Js-->
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

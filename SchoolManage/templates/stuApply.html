@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>出入申请 - 学生</title>
+    <!--Bootstrape Css-->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel = "stylesheet" type = "text/css" href = "{% static '总样式.css' %}">
+    <script src="https://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-primary fixed-top navbar-expand-lg topnav">
+        <h1 class="navbar-brand">出入校园申请系统</h1>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto" style = "float: top;">
+                <li class="nav-item">
+                    <a class="nav-link" href="/student/{{stu.id}}/home">个人中心</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/student/{{stu.id}}/profile">修改密码</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/student/{{stu.id}}/application">出入校园申请记录</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/student/{{stu.id}}/apply">出入校园申请<span class="sr-only">(current)</span></a>
+                </li>
+            </ul>
+        </div>
+        <a class="nav-link logout" href="/student/{{stu.id}}/home"><p><font color ="white">{{ stu.name }}</font></p></a>
+        <a class="nav-link logout" href="/" title="退出"><p><font color = "white">退出登录</font></p></a>
+    </nav>
+    <div id = "background"><br><br><br><br></div>
+
+    <div class = "stdmsg_center_article">
+        <br>
+        <h2>填写申请</h2>
+        <h4>出校请填写理由, 入校请填写近期途径地</h4>
+        <form id = "center_form" action="#" method="POST">
+                <label for="is_out" >申请类型 : </label>
+                <select id="is_out" name="is_out">
+                    <option value="1">出校</option>
+                    <option value="0">入校</option>
+                </select>
+                    <br>
+                    <textarea id="reason_site" name="reason_site" cols="60" rows="20"></textarea>
+                    <br>
+                    <button type="button" class="btn btn-primary btn-lg" id = "button_sub" onclick="onSubmit()">提交</button>
+            {{ error }}
+        </form>
+    </div>
+
+    <nav class="navbar fixed-bottom navbar-light navbar-dark bg-primary">
+        <a class="navbar-brand" href="">感谢使用，这里什么都没有哦</a>
+    </nav>
+
+    <script>
+        function onSubmit(){
+            let pd = {
+                'stu_id': '{{stu.id}}',
+                'is_out': $('#is_out').val(),
+                'reason_site': $('#reason_site').val(),
+            }
+            $.post('/api/stu/apply', pd).then((data)=>{
+                let dataJson = JSON.parse(data)
+                if(dataJson.succeed){
+                    alert('提交申请成功')
+                    location.href = '/student/{{stu.id}}/home'
+                }
+                else{
+                    alert('提交申请失败')
+                }
+            })
+        }
+    </script>
+
+    <!--Bootstrape Js-->
+    <!-- <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

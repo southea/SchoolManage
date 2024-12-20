@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>申请管理 - 辅导员</title>
+    <!--Bootstrape Css-->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel = "stylesheet" type = "text/css" href = "{% static '总样式.css' %}">
+    <script src="https://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-primary fixed-top navbar-expand-lg topnav">
+        <h1 class="navbar-brand">出入校园申请系统</h1>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto" style = "float: top;">
+                <li class="nav-item">
+                    <a class="nav-link" href="/instructor/{{ins.id}}/home">个人中心</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/instructor/{{ins.id}}/profile">修改个人信息</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/instructor/{{ins.id}}/applications">出入申请记录</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/instructor/{{ins.id}}/application">出入申请管理<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/instructor/{{ins.id}}/grade">所有年级</a>
+                </li>
+            </ul>
+        </div>
+        <a class="nav-link logout" href="/instructor/{{ins.id}}/home"><p><font color ="white">{{ ins.name }}</font></p></a>
+        <a class="nav-link logout" href="/" title="退出"><p><font color = "white">退出登录</font></p></a>
+    </nav>
+    <div id = "background"><br><br><br><br><br><br><br><br><br><br><br><br></div>
+
+    <div class = "stdmsg_center_article">
+        <div>
+            <br>
+            <h2 id = "jiatiao_top">出入申请管理</h2>
+            <form action="" method="POST">
+                <ul>
+                    {% for app in applications %}
+                        {% if app.grade.id == ins.grade_id %}
+                            {% if app.is_agreed == 0 %}
+                                <li class = "jiatiao">
+                                <h3>{{ app.grade.name }}&nbsp;&nbsp;
+                                {% if app.is_out == 1 %}
+                                申请出校</h3>
+                                {% elif app.is_out == 0 %}
+                                申请入校</h3>
+                                {% endif %}
+                                <p>申请理由：{{ app.reason_site }}</p>
+                                <p class = "jiatiao_stdname">------{{ app.stu.name }}</p>
+                                <p>{{ app.time }}</p>
+                                <br>
+                                <div id = "set_center">
+                                <button type="button" class="btn btn-outline-dark" id = "sub_button" onclick="onConfirm('{{app.id}}', 1)">同意</button>
+                                <button type="button" class="btn btn-outline-dark" id = "sub_button" onclick="onConfirm('{{app.id}}', 2)">不同意</button>
+                                </div>
+                                    <br>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </form>
+        </div>
+    </div>
+
+    <nav class="navbar fixed-bottom navbar-light navbar-dark bg-primary">
+        <a class="navbar-brand" href="#jiatiao_top">感谢使用，点我返回顶部</a>
+    </nav>
+
+    <script>
+        function onConfirm(app_id, is_agreed){
+            let pd = {
+                'id': app_id,
+                'is_agreed': is_agreed
+            }
+            $.post('/api/ins/confirm', pd).then((data)=>{
+                let dataJson = JSON.parse(data)
+                if(dataJson.succeed){
+                    alert('修改成功')
+                    location.href = '/instructor/{{ins.id}}/application'
+                }
+                else{
+                    alert('修改失败')
+                }
+            })
+        }
+    </script>
+
+    <!--Bootstrape Js-->
+    <!-- <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

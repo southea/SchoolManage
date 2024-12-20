@@ -1,0 +1,231 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>管理中心-修改信息</title>
+    <!--Bootstrape Css-->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel = "stylesheet" type = "text/css" href = "{% static '总样式.css' %}">
+    <script src="https://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-primary fixed-top navbar-expand-lg topnav">
+        <h1 class="navbar-brand">出入校园申请系统</h1>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto" style = "float: top;">
+                <li class="nav-item">
+                    <a class="nav-link " href="/admin/home">所有年级</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/admin/edit">修改信息<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/add">添加信息</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/delete">删除信息</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/applications">出入申请记录</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/application">出入申请管理</a>
+                </li>
+            </ul>
+        </div>
+        <a class="nav-link logout" href="/admin/home"><p><font color ="white">管理员</font></p></a>
+        <a class="nav-link logout" href="/" title="退出"><p><font color = "white">退出登录</font></p></a>
+    </nav>
+    <div id = "background"><br><br><br><br><br><br><br><br><br><br><br><br></div>
+
+    <div class="card stdmsg_center_article"  id = "std_card">
+        <br>
+        <br>
+        <div class="card-body">
+            <h5 class="card-title">修改学生信息</h5>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                学号：
+                <input type="text" id="stu_id"  name="stu_id" placeholder="请填入要修改信息的学号" maxlength="12" minlength="12" oninput="value = value.replace(/[^\d]/g,'')">
+            </li>
+            <li class="list-group-item">
+                姓名:
+                <input type="text" id="stu_name" name="stu_name">
+            </li>
+            <li class="list-group-item">
+                密码:
+                <input type="password" id="stu_password" name="stu_password">
+            </li>
+            <li class="list-group-item">性别:
+            <select id="stu_gender" name="stu_gender">
+                <option value="男">男</option>
+                <option value="女">女</option>
+            </select>
+            </li>
+            <li class="list-group-item">
+                年龄:
+                <input type="text" id="stu_age" name="stu_age" placeholder="请输入数字" oninput="value = value.replace(/[^\d]/g,'')">
+            </li>
+            <li class="list-group-item">
+                辅导员:
+            <select id="stu_ins_id" name="stu_ins_id">
+                {% for ins in allIns%}
+                <option value="{{ins.id}}">{{ins.name}}</option>
+                {% endfor %}
+            </select>
+            </li>
+
+            <li class="list-group-item">
+                年级:
+            <select id="stu_grade_id" name="stu_grade_id">
+                {% for grade in allGrade%}
+                <option value="{{grade.id}}">{{grade.name}}</option>
+                {% endfor %}
+            </select>
+            </li>
+
+            <li class="list-group-item"><button onclick="onStuAdd()">确认</button></li>
+
+        </ul>
+
+        <br>
+        <br>
+        <div class="card-body">
+            <h5 class="card-title">修改辅导员信息</h5>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                职工号:
+                <input type="text" id="ins_id" name="ins_id" placeholder="请填入要修改信息的职工号" maxlength="6" minlength="6" oninput="value = value.replace(/[^\d]/g,'')">
+            </li>
+            <li class="list-group-item">
+                姓名:
+                <input type="text" id="ins_name" name="ins_name">
+            </li>
+            <li class="list-group-item">
+                密码:
+                <input type="password" id="ins_password" name="ins_password">
+            </li>
+            <li class="list-group-item">
+                性别:
+            <select id="ins_gender" name="ins_gender">
+                <option value="男">男</option>
+                <option value="女">女</option>
+            </select>
+            </li>
+            <li class="list-group-item">
+                联系方式：
+                <input type="text" id="ins_tele" name="ins_tele" placeholder="请输入正确的手机号" maxlength="11">
+            </li>
+            <li class="list-group-item">
+                年级:
+            <select id="ins_grade_id" name="ins_grade_id">
+                {% for grade in allGrade%}
+                <option value="{{grade.id}}">{{grade.name}}</option>
+                {% endfor %}
+            </select>
+            </li>
+            <li class="list-group-item"><button onclick="onInsAdd()">确认</button></li>
+
+        </ul>
+
+        <br>
+        <br>
+        <div class="card-body">
+            <h5 class="card-title">修改年级信息</h5>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                年级ID:
+            <input type="text" id="grade_id" name="grade_id" placeholder="请填入要修改信息的ID">
+            </li>
+            <li class="list-group-item">
+                名称:
+                <input type="text" id="grade_name" name="grade_name">
+            </li>
+
+            <li class="list-group-item"><button onclick="onGradeAdd()">确认</button></li>
+        </ul>
+
+    </div>
+
+
+
+
+
+
+    <nav class="navbar fixed-bottom navbar-light navbar-dark bg-primary">
+        <a class="navbar-brand" href="#jiatiao_top">感谢使用，点我返回顶部</a>
+    </nav>
+
+    <script>
+        function onStuAdd(){
+            let pd = {
+                'id': $('#stu_id').val(),
+                'name': $('#stu_name').val(),
+                'password': $('#stu_password').val(),
+                'gender': $('#stu_gender').val(),
+                'age': $('#stu_age').val(),
+                'ins_id': $('#stu_ins_id').val(),
+                'grade_id': $('#stu_grade_id').val(),
+            }
+            console.log(pd)
+            $.post('/api/admin/edit/stu', pd).then((data)=>{
+                let dataJson = JSON.parse(data)
+                if(dataJson['succeed']){
+                    alert('修改成功')
+                }
+                else{
+                    alert(`修改失败, ${dataJson['msg']}`)
+                }
+            })
+        }
+
+        function onInsAdd(){
+            let pd = {
+                'id': $('#ins_id').val(),
+                'name': $('#ins_name').val(),
+                'password': $('#ins_password').val(),
+                'gender': $('#ins_gender').val(),
+                'tele': $('#ins_tele').val(),
+                'grade_id': $('#ins_grade_id').val(),
+            }
+            console.log(pd)
+            $.post('/api/admin/edit/ins', pd).then((data)=>{
+                let dataJson = JSON.parse(data)
+                if(dataJson['succeed']){
+                    alert('修改成功')
+                }
+                else{
+                    alert(`修改失败, ${dataJson['msg']}`)
+                }
+            })
+        }
+
+        function onGradeAdd(){
+            let pd = {
+                'id': $('#grade_id').val(),
+                'name': $('#grade_name').val(),
+            }
+            console.log(pd)
+            $.post('/api/admin/edit/grade', pd).then((data)=>{
+                let dataJson = JSON.parse(data)
+                if(dataJson['succeed']){
+                    alert('修改成功')
+                }
+                else{
+                    alert(`修改失败, ${dataJson['msg']}`)
+                }
+            })
+        }
+    </script>
+
+    <!--Bootstrape Js-->
+    <!-- <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

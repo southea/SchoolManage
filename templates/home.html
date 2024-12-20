@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>出入校园申请系统 - 首页</title>
+    <link rel = "stylesheet" type = "text/css" href = "{% static '试做一号机.css' %}">
+    <script src="https://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+</head>
+<body>
+    <div id = "top_page_back">
+        <img src = "{% static 'sd.jpg' %}">
+    </div>
+
+    <div class = "center_article" id="center_article">
+        <h1 size="100">出入校园申请系统</h1>
+        <br><br>
+        <p>
+            针对学生申请出入学校的出入校园申请系统，通过该系统，学生可以申请出入校园，辅导员可以查看并审批申请。
+        </p>
+        <br><br>
+        <div class = "link_login_button">
+            <button onclick="showLogin(1)" style="width:auto;">
+                登录
+            </button>
+        </div>
+    </div>
+    <div class = "modal" id = "login_win">
+        <form class = "modal_content animate" method="post" action="">
+            <img src="{% static 'sdulogo.jpg' %}">
+            <br>
+            <input type="radio" name="type" id="teacher" value="0">
+            <label for="teacher">辅导员</label>
+            <input type="radio" name="type" id ="student" value="1">
+            <label for="student">学生</label>
+            <input type="radio" name="type" id ="admin" value="2">
+            <label for="admin">管理员</label>
+            <div class = "container" >
+                <label><b>账号:</b></label>
+                <input type="text" placeholder="输入账号" name="username" required id="username">
+
+                <label><b>密码:</b></label>
+                <input type="password" placeholder="输入密码" name="password" required id="password">
+                <p id = "remember"><input type="checkbox" checked="checked">记住我</p>
+                <button type="button" style = "width:50%" onclick="onLogin()">登陆</button>
+                <button class = "close_button" type="button" onclick="showLogin(0)" class="cancelbtn">
+                        取消
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function showLogin(show){
+            if(show == 1){
+                document.getElementById('login_win').style.display='block'
+                document.getElementById('center_article').style.display='none'
+            }
+            else{
+                document.getElementById('login_win').style.display='none'
+                document.getElementById('center_article').style.display='block'
+            }
+        }
+
+        function onLogin(){
+            let pd = {
+                'username': $('#username').val(),
+                'password': $('#password').val(),
+                'type': $('input:radio:checked').val(),
+            }
+            $.post('/api/login', pd).then((data)=>{
+                let dataJson = JSON.parse(data)
+                if(dataJson.succeed)
+                {
+                    alert('登陆成功')
+                    let thetype = Number($('input:radio:checked').val())
+                    if(thetype == 0){
+                        location.href = `/instructor/${$('#username').val()}/home`
+                    }
+                    else if(thetype == 1){
+                        location.href = `/student/${$('#username').val()}/home`
+                    }
+                    else if(thetype == 2){
+                        location.href = '/admin/home'
+                    }
+                }
+                else
+                {
+                    alert('登陆失败')
+                }
+            })
+        }
+    </script>
+</body>
+</html>
